@@ -1,25 +1,35 @@
 const express = require("express");
-const conroller = require("../controllers/category");
-const router = express.Router();
 const passport = require("passport");
+const upload = require("../middleware/upload");
+const controller = require("../controllers/category");
+const router = express.Router();
 
-// localhost:5000/api/category/getAll
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
-  conroller.getAll
+  controller.getAll
 );
-
-// localhost:5000/api/category/getById
-router.get("/:id", conroller.getById);
-
-// localhost:5000/api/category/remove
-router.delete("/:id", conroller.remove);
-
-// localhost:5000/api/category/create
-router.post("/", conroller.create);
-
-// localhost:5000/api/category/update
-router.patch("/:id", conroller.update);
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  controller.getById
+);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  controller.remove
+);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  controller.create
+);
+router.patch(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  controller.update
+);
 
 module.exports = router;
